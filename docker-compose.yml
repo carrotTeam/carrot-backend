@@ -1,0 +1,31 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:8.0 # 사용할 이미지
+    restart: always
+    container_name: mysql # 컨테이너 이름 설정
+    ports:
+      - "3306:3306" # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)  <- 컨테이너 내부는 무조건 3306
+    environment: # -e 옵션
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # MYSQL 패스워드 설정 옵션
+
+  backend:
+    container_name: carrot-backend
+    image: ${SPRING_BOOT_IMAGE}
+
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    command:
+      [
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_unicode_ci",
+      ]
+
+
+    environment:
+      SPRING.DATASOURCE.URL: jdbc:mysql://mysql:3306/carrot?serverTimezone=Asia/Seoul
