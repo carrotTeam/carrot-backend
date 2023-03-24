@@ -3,6 +3,14 @@ package carrotTeam.carrot.domain.post.service;
 //import carrotTeam.carrot.domain.post.domain.repository.PostRepository;
 //import carrotTeam.carrot.domain.post.dto.PostInfo;
 //import carrotTeam.carrot.domain.post.dto.PostRequest;
+import carrotTeam.carrot.domain.post.domain.entity.Post;
+import carrotTeam.carrot.domain.post.domain.repository.PostRepository;
+import carrotTeam.carrot.domain.post.dto.PostInfo;
+import carrotTeam.carrot.domain.post.dto.PostRequest;
+import carrotTeam.carrot.domain.post.mapper.PostMapper;
+import carrotTeam.carrot.domain.user.domain.entity.User;
+import carrotTeam.carrot.domain.user.domain.repositorty.UserRepository;
+import carrotTeam.carrot.domain.user.mapper.UserMapper;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +24,10 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class PostService {
-    // private final PostRepository repository;
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
+
+    private final PostMapper postMapper;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -37,10 +48,18 @@ public class PostService {
         // getUrl 메소드를 통해서 S3에 업로드된 사진 URL을 가져오는 방식
         return amazonS3.getUrl(bucket, s3FileName).toString();
     }
-
-//    public PostInfo createPost(PostRequest request) {
-//        Post
-//    }
+// 클린코드
+    public PostInfo createPost(PostRequest request, String picture_address) {
+        User user = userRepository.findById(request.getUser_id()).orElseThrow(null);
+        Post post = Post.builder()
+                .title(request.getTitle())
+                .content(request.getContent())
+                .user(user)
+                .picture_address(picture_address)
+                .build();
+        postRepository.save(post);
+        return postMapper.mapPostEntityToPostInfo(post);
+    }
 
 
 }
