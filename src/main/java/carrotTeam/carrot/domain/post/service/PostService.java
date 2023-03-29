@@ -1,8 +1,5 @@
 package carrotTeam.carrot.domain.post.service;
 
-//import carrotTeam.carrot.domain.post.domain.repository.PostRepository;
-//import carrotTeam.carrot.domain.post.dto.PostInfo;
-//import carrotTeam.carrot.domain.post.dto.PostRequest;
 import carrotTeam.carrot.domain.post.domain.entity.Post;
 import carrotTeam.carrot.domain.post.domain.repository.PostRepository;
 import carrotTeam.carrot.domain.post.dto.PostInfo;
