@@ -64,4 +64,11 @@ public class PostService {
         return postMapper.mapPostEntityToPostInfo(post);
     }
 
+    public PostInfo deletePost(Long id) {
+        Post post = postRepository.findById(id).orElseThrow(null);
+        post.delete();
+        postRepository.save(post);
+        return postMapper.mapPostEntityToPostInfo(post);
+    }
+
 }
