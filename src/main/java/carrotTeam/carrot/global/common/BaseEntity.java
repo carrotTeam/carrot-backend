@@ -28,4 +28,7 @@ public abstract class BaseEntity {
   @Column(name = "is_active", columnDefinition = "tinyint(1) default 1", nullable = false)
   private Boolean isActive = true;
 
+  public void delete () {
+    this.isActive = false;
+  }
 }
