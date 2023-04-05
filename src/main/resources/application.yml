@@ -13,3 +13,15 @@ spring:
     properties:
       hibernate:
         format_sql: true
+cloud:
+  aws:
+    credentials:
+      accessKey: ${S3_ACCESSKEY}
+      secretKey: ${S3_SECRETKEY}
+    s3:
+      bucket: techeer-carrot
+#        dir: S3 디렉토리 이름
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
