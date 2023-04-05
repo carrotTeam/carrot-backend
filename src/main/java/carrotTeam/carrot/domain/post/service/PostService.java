@@ -1,8 +1,5 @@
 package carrotTeam.carrot.domain.post.service;
 
-//import carrotTeam.carrot.domain.post.domain.repository.PostRepository;
-//import carrotTeam.carrot.domain.post.dto.PostInfo;
-//import carrotTeam.carrot.domain.post.dto.PostRequest;
 import carrotTeam.carrot.domain.post.domain.entity.Post;
 import carrotTeam.carrot.domain.post.domain.repository.PostRepository;
 import carrotTeam.carrot.domain.post.dto.PostInfo;
@@ -10,7 +7,6 @@ import carrotTeam.carrot.domain.post.dto.PostRequest;
 import carrotTeam.carrot.domain.post.mapper.PostMapper;
 import carrotTeam.carrot.domain.user.domain.entity.User;
 import carrotTeam.carrot.domain.user.domain.repositorty.UserRepository;
-import carrotTeam.carrot.domain.user.mapper.UserMapper;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,5 +57,11 @@ public class PostService {
         return postMapper.mapPostEntityToPostInfo(post);
     }
 
+    public PostInfo updatePost(Long id, String title, String content) {
+        Post post = postRepository.findById(id).orElseThrow(null);
+        post.update(title, content);
+        postRepository.save(post);
+        return postMapper.mapPostEntityToPostInfo(post);
+    }
 
 }
