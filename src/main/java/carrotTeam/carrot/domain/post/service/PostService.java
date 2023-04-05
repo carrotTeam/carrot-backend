@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -71,4 +73,24 @@ public class PostService {
         return postMapper.mapPostEntityToPostInfo(post);
     }
 
+    public List<PostInfo> findTotal() {
+        return postRepository.findAllByIsActive(true)
+                .stream()
+                .map(PostInfo::of)
+                .collect(Collectors.toList());
+    }
+
+    public List<PostInfo> findById(Long id) {
+        return postRepository.findByIdAndIsActive(id, true)
+                .stream()
+                .map(PostInfo::of)
+                .collect(Collectors.toList());
+    }
+
+    public List<PostInfo> findByWord(String word) {
+        return postRepository.findByWordAndIsActive(word, true)
+                .stream()
+                .map(PostInfo::of)
+                .collect(Collectors.toList());
+    }
 }

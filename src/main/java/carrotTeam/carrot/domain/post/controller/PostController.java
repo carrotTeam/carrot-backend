@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -34,4 +35,21 @@ public class PostController {
     public PostInfo updatePost(@PathVariable Long id) throws IOException {
         return service.deletePost(id);
     }
+
+    @GetMapping(value = "/read")
+    public List<PostInfo> findTotalRestaurant () {
+        return service.findTotal();
+    }
+
+    @GetMapping(value = "/read/{id}")
+    public List<PostInfo> findTotalRestaurant (@PathVariable Long id) {
+        return service.findById(id);
+    }
+
+    @GetMapping(value = "/read/word")
+    public List<PostInfo> findTotalRestaurant (@RequestParam String word) {
+        return service.findByWord(word);
+    }
+
+
 }
