@@ -29,4 +29,9 @@ public class PostController {
     public PostInfo updatePost(@RequestBody PostUpdateRequest request) throws IOException {
         return service.updatePost(request.getPost_id(), request.getTitle(), request.getContent());
     }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public PostInfo updatePost(@PathVariable Long id) throws IOException {
+        return service.deletePost(id);
+    }
 }
