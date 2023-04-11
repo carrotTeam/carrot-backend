@@ -1,5 +1,6 @@
 package carrotTeam.carrot.domain.user.domain.entity;
 
+import carrotTeam.carrot.domain.user.dto.UserUpdateRequest;
 import carrotTeam.carrot.global.common.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,6 +38,13 @@ public class User extends BaseEntity {
         this.password = password;
         this.location = location;
     }
+
+    public void update(UserUpdateRequest userUpdateRequest){
+        this.email = userUpdateRequest.getEmail();
+        this.password = userUpdateRequest.getPassword();
+        this.location = userUpdateRequest.getLocation();
+    }
+
 
 
 }
