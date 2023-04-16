@@ -23,19 +23,19 @@ public class UserController {
         return ResponseEntity.ok(userInfo);
     }
 
-    @GetMapping("/api/UserId/{id}")
+    @GetMapping("/api/Users/{id}")
     public ResponseEntity getUser(@PathVariable("id") Long id){
         UserInfo userInfo = userService.findUserId(id);
         return ResponseEntity.ok(userInfo);
     }
 
-    @PutMapping("/api/User/Change")
+    @PutMapping("/api/Users")
     public ResponseEntity updateUser(@Valid @RequestBody UserUpdateRequest request){
         UserInfo userInfo = userService.updateUser(request);
         return ResponseEntity.ok(userInfo);
     }
 
-    @DeleteMapping("/api/User/Delete/{id}")
+    @DeleteMapping("/api/Users/{id}")
     public ResponseEntity deleteUser(@PathVariable("id") Long id){
         UserInfo userInfo = userService.DeleteUser(id);
         return  ResponseEntity.ok(userInfo);
