@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -46,18 +48,30 @@ public class PostService {
         // getUrl 메소드를 통해서 S3에 업로드된 사진 URL을 가져오는 방식
         return amazonS3.getUrl(bucket, s3FileName).toString();
     }
-// 클린코드
-    public PostInfo createPost(PostRequest request, String picture_address) {
-        User user = userRepository.findById(request.getUser_id()).orElseThrow(null);
+
+    public PostInfo createPost(Long user_id, String title, String content, List<String> address_list) {
+        User user = userRepository.findById(user_id).orElseThrow(null);
         Post post = Post.builder()
-                .title(request.getTitle())
-                .content(request.getContent())
+                .title(title)
+                .content(content)
                 .user(user)
-                .picture_address(picture_address)
+                .picture_address(address_list)
                 .build();
         postRepository.save(post);
         return postMapper.mapPostEntityToPostInfo(post);
     }
+
+//    public PostInfo createPost(PostRequest request, String picture_address) {
+//        User user = userRepository.findById(request.getUser_id()).orElseThrow(null);
+//        Post post = Post.builder()
+//                .title(request.getTitle())
+//                .content(request.getContent())
+//                .user(user)
+//                .picture_address(picture_address)
+//                .build();
+//        postRepository.save(post);
+//        return postMapper.mapPostEntityToPostInfo(post);
+//    }
 
     public PostInfo updatePost(Long id, String title, String content) {
         Post post = postRepository.findById(id).orElseThrow(null);

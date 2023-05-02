@@ -2,11 +2,11 @@ package carrotTeam.carrot.domain.post.domain.entity;
 
 import carrotTeam.carrot.domain.user.domain.entity.User;
 import carrotTeam.carrot.global.common.BaseEntity;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -24,14 +24,15 @@ public class Post extends BaseEntity {
     private String content;
 
     @Column(name = "picture_address", nullable = false, length = 2000)
-    private String picture_address;
+    @ElementCollection
+    private List<String> picture_address;
 
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Builder
-    public Post(User user, String title, String content, String picture_address) {
+    public Post(User user, String title, String content, List<String> picture_address) {
         this.user = user;
         this.title = title;
         this.content = content;
