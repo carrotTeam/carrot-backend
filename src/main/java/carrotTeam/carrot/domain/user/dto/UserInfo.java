@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class UserInfo {
+
+    private String nickName;
     private String email;
     private String password;
     private String location;

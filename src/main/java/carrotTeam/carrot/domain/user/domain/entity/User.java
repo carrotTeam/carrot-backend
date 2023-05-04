@@ -20,6 +20,9 @@ public class User extends BaseEntity {
     private Long id;
 
     @Column(nullable = false, length = 30)
+    private String nickname;
+
+    @Column(nullable = false, length = 30)
     private String email;
 
     @Column(nullable = false, length = 100)
@@ -31,9 +34,11 @@ public class User extends BaseEntity {
 
     @Builder
     public User(
+            String nickname,
             String email,
             String password,
             String location) {
+        this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.location = location;
