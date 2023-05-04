@@ -9,6 +9,7 @@ public class UserMapper {
 
     public User mapCreateUserToEntity(UserCreateRequest userCreateRequest){
         return User.builder()
+                .nickname(userCreateRequest.getNickName())
                 .email(userCreateRequest.getEmail())
                 .password(userCreateRequest.getEmail())
                 .location(userCreateRequest.getLocation())
@@ -17,6 +18,7 @@ public class UserMapper {
 
     public UserInfo mapUserEntityToUserInfo(User user) {
         return UserInfo.builder()
+                .nickName(user.getNickname())
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .location(user.getLocation())
