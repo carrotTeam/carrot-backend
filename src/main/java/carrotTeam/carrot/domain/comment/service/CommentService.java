@@ -4,6 +4,7 @@ import carrotTeam.carrot.domain.comment.domain.entity.Comment;
 import carrotTeam.carrot.domain.comment.domain.repository.CommentRepository;
 import carrotTeam.carrot.domain.comment.dto.CommentInfo;
 import carrotTeam.carrot.domain.comment.dto.CommentRequest;
+import carrotTeam.carrot.domain.comment.dto.CommentResponse;
 import carrotTeam.carrot.domain.comment.mapper.CommentMapper;
 import carrotTeam.carrot.domain.post.domain.entity.Post;
 import carrotTeam.carrot.domain.post.domain.repository.PostRepository;
@@ -12,6 +13,8 @@ import carrotTeam.carrot.domain.user.domain.entity.User;
 import carrotTeam.carrot.domain.user.domain.repositorty.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -26,12 +29,12 @@ public class CommentService {
 
     public CommentInfo createComment(CommentRequest commentRequest) {
 
-        Comment newComment = CreateCommentToEntity(commentRequest);
+        Comment newComment = createCommentToEntity(commentRequest);
         Comment savedComment = commentRepository.save(newComment);
         return commentMapper.mapCommentEntityToCommentInfo(savedComment);
     }
 
-    public Comment CreateCommentToEntity(CommentRequest commentRequest) {
+    public Comment createCommentToEntity(CommentRequest commentRequest) {
 
         User findUser = getUserById(commentRequest.getUser_id());
         Post findPost = getPostById(commentRequest.getPost_id());
@@ -42,6 +45,8 @@ public class CommentService {
                 .content(commentRequest.getContent())
                 .build();
     }
+
+
 
 
     private User getUserById(Long userId) {
