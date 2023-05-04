@@ -4,6 +4,7 @@ import carrotTeam.carrot.domain.comment.domain.entity.Comment;
 import carrotTeam.carrot.domain.comment.domain.repository.CommentRepository;
 import carrotTeam.carrot.domain.comment.dto.CommentInfo;
 import carrotTeam.carrot.domain.comment.dto.CommentRequest;
+import carrotTeam.carrot.domain.comment.mapper.CommentMapper;
 import carrotTeam.carrot.domain.post.domain.entity.Post;
 import carrotTeam.carrot.domain.post.domain.repository.PostRepository;
 import carrotTeam.carrot.domain.post.service.PostService;
@@ -20,16 +21,17 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private  final PostRepository postRepository;
+    private final CommentMapper commentMapper;
 
 
     public CommentInfo createComment(CommentRequest commentRequest) {
 
-        Comment createNewCommentEntity = CreateNewCommentEntity(commentRequest);
-        Comment comment = commentRepository.save(createNewCommentEntity);
-        return commentEntityToCommentInfo(comment);
+        Comment newComment = CreateCommentToEntity(commentRequest);
+        Comment savedComment = commentRepository.save(newComment);
+        return commentMapper.mapCommentEntityToCommentInfo(savedComment);
     }
 
-    public Comment CreateNewCommentEntity(CommentRequest commentRequest) {
+    public Comment CreateCommentToEntity(CommentRequest commentRequest) {
 
         User findUser = getUserById(commentRequest.getUser_id());
         Post findPost = getPostById(commentRequest.getPost_id());
@@ -41,13 +43,6 @@ public class CommentService {
                 .build();
     }
 
-    private CommentInfo commentEntityToCommentInfo(Comment savedComment) {
-        return CommentInfo.builder()
-                .content(savedComment.getContent())
-                .createAt(savedComment.getCreatedAt())
-                .updateAt(savedComment.getUpdatedAt())
-                .build();
-    }
 
     private User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(null);
