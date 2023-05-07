@@ -19,6 +19,7 @@ public enum ErrorCode {
 //     Post
 
 //     Comment
+    COMMENT_NOT_FOUND(400, "C001", "댓글을 찾을 수 없습니다!")
     ;
 
     private final int status;
