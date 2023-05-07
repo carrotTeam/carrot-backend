@@ -46,6 +46,12 @@ public class CommentService {
                 .build();
     }
 
+//    public List<CommentResponse> findCommentById(Long id){
+//
+//        if(!postRepository.existsById(id)){
+//
+//        }
+//    }
 
 
 
