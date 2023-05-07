@@ -14,6 +14,7 @@ public enum ResultCode {
     // post
 
     // comment
+    CREATE_COMMENT_SUCCESS("C001", "200", "댓글이 등록되었습니다!")
     ;
 
     private final String code;
