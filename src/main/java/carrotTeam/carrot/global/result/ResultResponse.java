@@ -8,7 +8,7 @@ public class ResultResponse{
     private String code;
     private String message;
     private Object data;
-대
+
     public static ResultResponse of(ResultCode resultCode, Object data) {
         return new ResultResponse(resultCode, data);
     }
