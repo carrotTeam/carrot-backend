@@ -15,8 +15,9 @@ public enum ErrorCode {
 
 
 //     User
-
+    USER_NOT_FOUND(400, "U001", "사용자를 찾을 수 없습니다!"),
 //     Post
+    POST_NOT_FOUND(400, "P001", "게시글을 찾을 수 없습니다!"),
 
 //     Comment
     COMMENT_NOT_FOUND(400, "C001", "댓글을 찾을 수 없습니다!")
