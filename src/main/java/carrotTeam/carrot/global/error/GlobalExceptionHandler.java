@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler
+    @ExceptionHandler(BusinessException.class)
     protected ResponseEntity<ErrorResponse> handleRuntimeException(BusinessException e) {
         final ErrorCode errorCode = e.getErrorCode();
         final ErrorResponse response =
