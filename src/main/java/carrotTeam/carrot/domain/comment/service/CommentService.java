@@ -12,6 +12,7 @@ import carrotTeam.carrot.domain.post.exception.NotFoundPost;
 import carrotTeam.carrot.domain.post.service.PostService;
 import carrotTeam.carrot.domain.user.domain.entity.User;
 import carrotTeam.carrot.domain.user.domain.repositorty.UserRepository;
+import carrotTeam.carrot.domain.user.exception.NotFoundUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
@@ -58,7 +59,7 @@ public class CommentService {
 
 
     private User getUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(NotFoundPost::new);
+        return userRepository.findById(userId).orElseThrow(NotFoundUser::new);
     }
 
     private Post getPostById(Long postId) {
