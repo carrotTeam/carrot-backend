@@ -23,7 +23,7 @@ public class CommentRequest {
     private Long post_id;
 
     @Schema(description = "comment 내용")
-    @NotNull
+    @NotBlank(message = "댓글을 작성해주세요!")
     private String content;
 
 
