@@ -14,7 +14,8 @@ public enum ResultCode {
     // post
 
     // comment
-    CREATE_COMMENT_SUCCESS("C001", "200", "댓글이 등록되었습니다!")
+    CREATE_COMMENT_SUCCESS("C001", "200", "댓글이 등록되었습니다!"),
+    GET_ONE_POST_COMMENT_SUCCESS("C002", "200", "게시글의 댓글을 조회하였습니다!"),
     ;
 
     private final String code;
