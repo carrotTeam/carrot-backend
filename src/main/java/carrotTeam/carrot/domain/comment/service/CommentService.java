@@ -9,12 +9,10 @@ import carrotTeam.carrot.domain.comment.mapper.CommentMapper;
 import carrotTeam.carrot.domain.post.domain.entity.Post;
 import carrotTeam.carrot.domain.post.domain.repository.PostRepository;
 import carrotTeam.carrot.domain.post.exception.NotFoundPost;
-import carrotTeam.carrot.domain.post.service.PostService;
 import carrotTeam.carrot.domain.user.domain.entity.User;
 import carrotTeam.carrot.domain.user.domain.repositorty.UserRepository;
 import carrotTeam.carrot.domain.user.exception.NotFoundUser;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -58,5 +58,4 @@ public class ErrorResponse {
                     .collect(Collectors.toList());
         }
     }
-
 }
