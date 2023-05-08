@@ -18,6 +18,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -49,12 +50,26 @@ public class CommentService {
                 .build();
     }
 
-//    public List<CommentResponse> findCommentById(Long id){
-//
-//        if(!postRepository.existsById(id)){
-//
-//        }
-//    }
+    public List<CommentResponse> findCommentByPostId(Long id){
+
+        if(!postRepository.existsById(id)){
+            throw new NotFoundPost();
+        }
+        List<CommentResponse> commentList =
+                commentRepository.findByPostId(id).stream()
+                        .map(this::commentEntityToCommentResponse)
+                        .collect(Collectors.toList());
+        return commentList;
+    }
+
+    private CommentResponse commentEntityToCommentResponse(Comment comment) {
+        return CommentResponse.builder()
+                .comment_Id(comment.getId())
+                .content(comment.getContent())
+                .nickName(comment.getUser().getNickname())
+                .localDateTime(comment.getCreatedAt())
+                .build();
+    }
 
 
 
