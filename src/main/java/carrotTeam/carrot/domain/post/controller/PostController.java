@@ -58,11 +58,18 @@ public class PostController {
         return service.findTotal();
     }
 
-    @GetMapping("/{id}")
-    public List<PostInfo> findTotalRestaurant (
+    @GetMapping("users/{id}")
+    public List<PostInfo> findByUserIdPost (
             @PathVariable Long id
     ) throws IOException {
-        return service.findById(id);
+        return service.findByUserId(id);
+    }
+
+    @GetMapping("/{id}")
+    public List<PostInfo> findByPostIdPost (
+            @PathVariable Long id
+    ) throws IOException {
+        return service.findByPostId(id);
     }
 
     @GetMapping("/word/{word}")

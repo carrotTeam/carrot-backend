@@ -80,8 +80,15 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public List<PostInfo> findById(Long id) {
-        return postRepository.findByIdAndIsActive(id, true)
+    public List<PostInfo> findByUserId(Long id) {
+        return postRepository.findByUserIdAndIsActive(id, true)
+                .stream()
+                .map(PostInfo::of)
+                .collect(Collectors.toList());
+    }
+
+    public List<PostInfo> findByPostId(Long id) {
+        return postRepository.findByPostIdAndIsActive(id, true)
                 .stream()
                 .map(PostInfo::of)
                 .collect(Collectors.toList());
