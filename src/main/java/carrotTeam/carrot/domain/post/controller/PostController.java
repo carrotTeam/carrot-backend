@@ -35,16 +35,6 @@ public class PostController {
         return service.createPost(request.getUser_id(), request.getTitle(), request.getContent(), address_list);
     }
 
-
-//    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-//    public PostInfo uploadFile(
-//            @RequestPart(value = "images", required = false) MultipartFile multipartFile,
-//            @RequestPart(value = "request") PostRequest request
-//    ) throws IOException {
-//        String picture_address = service.upload(multipartFile);
-//        return service.createPost(request, picture_address);
-//    }
-
     @PutMapping
     public PostInfo updatePost (
             @RequestBody PostUpdateRequest request
@@ -80,5 +70,11 @@ public class PostController {
         return service.findByWord(word);
     }
 
+
+    @GetMapping("/test")
+    public void flushViewsTest (
+    ) throws IOException {
+        service.flushViews();
+    }
 
 }

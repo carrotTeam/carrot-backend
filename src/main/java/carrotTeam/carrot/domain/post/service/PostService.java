@@ -1,9 +1,10 @@
 package carrotTeam.carrot.domain.post.service;
 
 import carrotTeam.carrot.domain.post.domain.entity.Post;
+import carrotTeam.carrot.domain.post.domain.entity.RedisPost;
 import carrotTeam.carrot.domain.post.domain.repository.PostRepository;
+import carrotTeam.carrot.domain.post.domain.repository.RedisRepository;
 import carrotTeam.carrot.domain.post.dto.PostInfo;
-import carrotTeam.carrot.domain.post.dto.PostRequest;
 import carrotTeam.carrot.domain.post.mapper.PostMapper;
 import carrotTeam.carrot.domain.user.domain.entity.User;
 import carrotTeam.carrot.domain.user.domain.repositorty.UserRepository;
@@ -11,14 +12,15 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +28,8 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final RedisTemplate<String, RedisPost> redisTemplate;
+    private final RedisRepository redisRepository;
 
     private final PostMapper postMapper;
 
@@ -61,18 +65,6 @@ public class PostService {
         return postMapper.mapPostEntityToPostInfo(post);
     }
 
-//    public PostInfo createPost(PostRequest request, String picture_address) {
-//        User user = userRepository.findById(request.getUser_id()).orElseThrow(null);
-//        Post post = Post.builder()
-//                .title(request.getTitle())
-//                .content(request.getContent())
-//                .user(user)
-//                .picture_address(picture_address)
-//                .build();
-//        postRepository.save(post);
-//        return postMapper.mapPostEntityToPostInfo(post);
-//    }
-
     public PostInfo updatePost(Long id, String title, String content) {
         Post post = postRepository.findById(id).orElseThrow(null);
         post.update(title, content);
@@ -95,10 +87,21 @@ public class PostService {
     }
 
     public List<PostInfo> findById(Long id) {
+        increaseView(id);
         return postRepository.findByIdAndIsActive(id, true)
                 .stream()
                 .map(PostInfo::of)
                 .collect(Collectors.toList());
+    }
+
+    public void increaseView(Long id) {
+        RedisPost redisPost = redisTemplate.opsForValue().get(id.toString());
+        if (redisPost == null) {
+            redisPost = new RedisPost();
+            redisPost.setId(id);
+        }
+        redisPost.increaseViewCount();
+        redisTemplate.opsForValue().set(id.toString(), redisPost);
     }
 
     public List<PostInfo> findByWord(String word) {
@@ -107,4 +110,36 @@ public class PostService {
                 .map(PostInfo::of)
                 .collect(Collectors.toList());
     }
+
+    //@Scheduled(fixedDelay = 5000)
+    public void flushViews() {
+        LocalDateTime lastUpdatedTime = LocalDateTime.now().minusSeconds(5);
+        Set<String> keys = redisTemplate.keys("*");
+        // key 전체 받아왔으니까 반복문으로 돌리던가 stream으로 돌려서 시간 이후 찾아서 sql에 업데이트
+
+        for (String s : keys) {
+
+        }
+
+        Map<Object, Object> redisHash = redisTemplate.opsForHash().entries("*");
+
+        List<RedisPost> redisPosts = redisHash.values().stream()
+                .map(obj -> (RedisPost) obj)
+                .filter(redisPost -> redisPost.getLastUpdatedTime().isAfter(lastUpdatedTime))
+                .collect(Collectors.toList());
+
+        redisPosts.forEach(redisPost -> {
+            Post post = postRepository.findById(redisPost.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Post not found for id " + redisPost.getId()));
+            post.updateView(redisPost.getViewCount());
+            postRepository.save(post);
+        });
+    }
+
+//    @PostConstruct
+//    public void init() {
+//        flushViews();
+//    }
+
+
 }
