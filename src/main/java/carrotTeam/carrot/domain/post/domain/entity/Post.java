@@ -28,7 +28,7 @@ public class Post extends BaseEntity {
     @ElementCollection
     private List<String> picture_address;
 
-    @ManyToOne(targetEntity = User.class)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
