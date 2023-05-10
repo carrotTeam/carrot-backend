@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("/api/posts")
@@ -21,10 +22,20 @@ public class PostController {
     private final PostService service;
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public PostInfo uploadFile(@RequestPart(value = "images", required = false) MultipartFile multipartFile, @RequestPart(value = "request") PostRequest request) throws IOException {
-        String picture_address = service.upload(multipartFile);
-        return service.createPost(request, picture_address);
+    public PostInfo creatPost (
+            @RequestPart(value = "files", required=true) List<MultipartFile> files,
+            @RequestPart(value = "requestDto") PostRequest request
+    ) throws Exception {
+        List<String> address_list = new ArrayList<>();
+
+        for(MultipartFile file : files) {
+            String picture_address = service.upload(file);
+            address_list.add(picture_address);
+        }
+
+        return service.createPost(request.getUser_id(), request.getTitle(), request.getContent(), address_list);
     }
+
 
     @PutMapping
     public PostInfo updatePost (
