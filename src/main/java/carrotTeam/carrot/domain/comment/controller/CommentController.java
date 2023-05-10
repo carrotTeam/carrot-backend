@@ -26,10 +26,10 @@ public class CommentController {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_COMMENT_SUCCESS, commentInfo));
     }
 
-    @GetMapping("/api/comments/{post_Id}")
-    public ResponseEntity<ResultResponse> getCommentList(@PathVariable Long post_Id) {
+    @GetMapping("/api/comments/{post_id}")
+    public ResponseEntity<ResultResponse> getCommentList(@PathVariable Long post_id) {
 
-        List<CommentResponse> commentList = commentService.findCommentByPostId(post_Id);
+        List<CommentResponse> commentList = commentService.findCommentByPostId(post_id);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_ONE_POST_COMMENT_SUCCESS, commentList));
     }
 
