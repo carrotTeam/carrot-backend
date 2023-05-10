@@ -75,6 +75,9 @@ public class CommentService {
     public void deleteComment(Long comment_id){
 
         Comment foundComment = commentRepository.findById(comment_id).orElseThrow(NotFoundComment::new);
+        if(!foundComment.getIsActive()){
+            throw new NotFoundComment();
+        }
         foundComment.delete();
         commentRepository.save(foundComment);
     }
