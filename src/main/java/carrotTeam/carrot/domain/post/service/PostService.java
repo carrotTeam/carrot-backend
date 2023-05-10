@@ -46,14 +46,14 @@ public class PostService {
         // getUrl 메소드를 통해서 S3에 업로드된 사진 URL을 가져오는 방식
         return amazonS3.getUrl(bucket, s3FileName).toString();
     }
-// 클린코드
-    public PostInfo createPost(PostRequest request, String picture_address) {
-        User user = userRepository.findById(request.getUser_id()).orElseThrow(null);
+
+    public PostInfo createPost(Long user_id, String title, String content, List<String> address_list) {
+        User user = userRepository.findById(user_id).orElseThrow(null);
         Post post = Post.builder()
-                .title(request.getTitle())
-                .content(request.getContent())
+                .title(title)
+                .content(content)
                 .user(user)
-                .picture_address(picture_address)
+                .picture_address(address_list)
                 .build();
         postRepository.save(post);
         return postMapper.mapPostEntityToPostInfo(post);
