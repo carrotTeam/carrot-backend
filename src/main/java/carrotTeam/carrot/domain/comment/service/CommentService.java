@@ -5,6 +5,7 @@ import carrotTeam.carrot.domain.comment.domain.repository.CommentRepository;
 import carrotTeam.carrot.domain.comment.dto.CommentInfo;
 import carrotTeam.carrot.domain.comment.dto.CommentRequest;
 import carrotTeam.carrot.domain.comment.dto.CommentResponse;
+import carrotTeam.carrot.domain.comment.exception.NotFoundComment;
 import carrotTeam.carrot.domain.comment.mapper.CommentMapper;
 import carrotTeam.carrot.domain.post.domain.entity.Post;
 import carrotTeam.carrot.domain.post.domain.repository.PostRepository;
@@ -15,6 +16,7 @@ import carrotTeam.carrot.domain.user.exception.NotFoundUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +27,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
-    private  final PostRepository postRepository;
+    private final PostRepository postRepository;
     private final CommentMapper commentMapper;
 
 
@@ -69,14 +71,32 @@ public class CommentService {
                 .build();
     }
 
+    @Transactional
+    public void deleteComment(Long comment_id){
+
+        Comment foundComment = commentRepository.findById(comment_id).orElseThrow(NotFoundComment::new);
+        if(!foundComment.getIsActive()){
+            throw new NotFoundComment();
+        }
+        foundComment.delete();
+        commentRepository.save(foundComment);
+    }
+
 
 
     private User getUserById(Long userId) {
+
         return userRepository.findById(userId).orElseThrow(NotFoundUser::new);
     }
 
     private Post getPostById(Long postId) {
+
         return postRepository.findById(postId).orElseThrow(NotFoundPost::new);
+    }
+
+    private Comment getCommentById(Long commentId){
+
+        return commentRepository.findById(commentId).orElseThrow(NotFoundComment::new);
     }
 }
 
