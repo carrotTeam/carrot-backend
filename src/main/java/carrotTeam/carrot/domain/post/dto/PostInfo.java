@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -16,7 +17,7 @@ public class PostInfo {
     private Long user_id;
     private String title;
     private String content;
-    private String picture_address;
+    private List<String> picture_address;
     private Boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

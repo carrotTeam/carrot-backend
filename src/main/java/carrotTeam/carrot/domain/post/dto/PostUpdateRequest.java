@@ -18,6 +18,7 @@ public class PostUpdateRequest {
 
     @NotBlank(message = "수정 할 게시글은 공백일 수 없습니다")
     private Long post_id;
+
     @NotBlank(message = "제목은 공백일 수 없습니다")
     private String title;
 
