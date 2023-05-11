@@ -24,80 +24,74 @@ import java.util.stream.Collectors;
 @Service
 public class CommentService {
 
+  private final CommentRepository commentRepository;
+  private final UserRepository userRepository;
+  private final PostRepository postRepository;
+  private final CommentMapper commentMapper;
 
-    private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
-    private final PostRepository postRepository;
-    private final CommentMapper commentMapper;
+  public CommentInfo createComment(CommentRequest commentRequest) {
 
+    Comment newComment = createCommentToEntity(commentRequest);
+    Comment savedComment = commentRepository.save(newComment);
+    return commentMapper.mapCommentEntityToCommentInfo(savedComment);
+  }
 
-    public CommentInfo createComment(CommentRequest commentRequest) {
+  public Comment createCommentToEntity(CommentRequest commentRequest) {
 
-        Comment newComment = createCommentToEntity(commentRequest);
-        Comment savedComment = commentRepository.save(newComment);
-        return commentMapper.mapCommentEntityToCommentInfo(savedComment);
+    User findUser = getUserById(commentRequest.getUser_id());
+    Post findPost = getPostById(commentRequest.getPost_id());
+
+    return Comment.builder()
+        .user(findUser)
+        .post(findPost)
+        .content(commentRequest.getContent())
+        .build();
+  }
+
+  public List<CommentResponse> findCommentByPostId(Long id) {
+
+    if (!postRepository.existsById(id)) {
+      throw new NotFoundPost();
     }
+    List<CommentResponse> commentList =
+        commentRepository.findByPostId(id).stream()
+            .map(this::commentEntityToCommentResponse)
+            .collect(Collectors.toList());
+    return commentList;
+  }
 
-    public Comment createCommentToEntity(CommentRequest commentRequest) {
+  private CommentResponse commentEntityToCommentResponse(Comment comment) {
+    return CommentResponse.builder()
+        .comment_Id(comment.getId())
+        .content(comment.getContent())
+        .nickName(comment.getUser().getNickname())
+        .localDateTime(comment.getCreatedAt())
+        .build();
+  }
 
-        User findUser = getUserById(commentRequest.getUser_id());
-        Post findPost = getPostById(commentRequest.getPost_id());
+  @Transactional
+  public void deleteComment(Long comment_id) {
 
-        return Comment.builder()
-                .user(findUser)
-                .post(findPost)
-                .content(commentRequest.getContent())
-                .build();
+    Comment foundComment = commentRepository.findById(comment_id).orElseThrow(NotFoundComment::new);
+    if (!foundComment.getIsActive()) {
+      throw new NotFoundComment();
     }
+    foundComment.delete();
+    commentRepository.save(foundComment);
+  }
 
-    public List<CommentResponse> findCommentByPostId(Long id){
+  private User getUserById(Long userId) {
 
-        if(!postRepository.existsById(id)){
-            throw new NotFoundPost();
-        }
-        List<CommentResponse> commentList =
-                commentRepository.findByPostId(id).stream()
-                        .map(this::commentEntityToCommentResponse)
-                        .collect(Collectors.toList());
-        return commentList;
-    }
+    return userRepository.findById(userId).orElseThrow(NotFoundUser::new);
+  }
 
-    private CommentResponse commentEntityToCommentResponse(Comment comment) {
-        return CommentResponse.builder()
-                .comment_Id(comment.getId())
-                .content(comment.getContent())
-                .nickName(comment.getUser().getNickname())
-                .localDateTime(comment.getCreatedAt())
-                .build();
-    }
+  private Post getPostById(Long postId) {
 
-    @Transactional
-    public void deleteComment(Long comment_id){
+    return postRepository.findById(postId).orElseThrow(NotFoundPost::new);
+  }
 
-        Comment foundComment = commentRepository.findById(comment_id).orElseThrow(NotFoundComment::new);
-        if(!foundComment.getIsActive()){
-            throw new NotFoundComment();
-        }
-        foundComment.delete();
-        commentRepository.save(foundComment);
-    }
+  private Comment getCommentById(Long commentId) {
 
-
-
-    private User getUserById(Long userId) {
-
-        return userRepository.findById(userId).orElseThrow(NotFoundUser::new);
-    }
-
-    private Post getPostById(Long postId) {
-
-        return postRepository.findById(postId).orElseThrow(NotFoundPost::new);
-    }
-
-    private Comment getCommentById(Long commentId){
-
-        return commentRepository.findById(commentId).orElseThrow(NotFoundComment::new);
-    }
+    return commentRepository.findById(commentId).orElseThrow(NotFoundComment::new);
+  }
 }
-
-
