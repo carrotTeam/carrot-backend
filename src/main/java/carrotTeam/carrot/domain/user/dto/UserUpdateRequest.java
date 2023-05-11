@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -13,9 +14,20 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class UserUpdateRequest {
-    private Long id;
-    private String email;
-    private String password;
-    private String location;
-    private LocalDateTime updatedAt;
+  @NotNull(message = "아이디는 공백일 수 없습니다.")
+  private Long id;
+
+  @NotBlank(message = "닉네임은 공백일 수 없습니다")
+  private String nickName;
+
+  @NotBlank(message = "이메일은 공백일 수 없습니다.")
+  private String email;
+
+  @NotBlank(message = "비밀번호는 공백일 수 없습니다.")
+  private String password;
+
+  @NotBlank(message = "위치는 공백일 수 없습니다.")
+  private String location;
+
+  private LocalDateTime updatedAt;
 }
