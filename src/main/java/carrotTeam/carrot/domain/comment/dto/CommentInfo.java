@@ -11,19 +11,19 @@ import org.springframework.format.annotation.DateTimeFormat;
 @NoArgsConstructor
 public class CommentInfo {
 
-    @DateTimeFormat
-    private LocalDateTime createAt;
+  @DateTimeFormat
+  private LocalDateTime createAt;
 
-    @DateTimeFormat
-    private LocalDateTime updateAt;
+  @DateTimeFormat
+  private LocalDateTime updateAt;
 
-    private  String content;
+  private String content;
 
-    @Builder
-    public CommentInfo(String content, LocalDateTime createAt, LocalDateTime updateAt) {
-        this.content = content;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
-    }
+  @Builder
+  public CommentInfo(String content, LocalDateTime createAt, LocalDateTime updateAt) {
+    this.content = content;
+    this.createAt = createAt;
+    this.updateAt = updateAt;
+  }
 
 }
