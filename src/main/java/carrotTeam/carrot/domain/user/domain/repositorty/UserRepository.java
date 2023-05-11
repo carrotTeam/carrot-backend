@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    @Query("SELECT r FROM User r WHERE r.id = :id AND r.isActive = true")
-    Optional<User> findById(@Param("id") Long id);
-
+  @Query("SELECT r FROM User r WHERE r.id = :id AND r.isActive = true")
+  Optional<User> findById(@Param("id") Long id);
 }

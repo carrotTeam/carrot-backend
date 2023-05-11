@@ -14,9 +14,9 @@ import java.time.LocalDateTime;
 @Builder
 public class UserInfo {
 
-    private String nickName;
-    private String email;
-    private String password;
-    private String location;
-    private LocalDateTime createdAt;
+  private String nickName;
+  private String email;
+  private String password;
+  private String location;
+  private LocalDateTime createdAt;
 }

@@ -1,4 +1,5 @@
 package carrotTeam.carrot.domain.user.service;
+
 import carrotTeam.carrot.domain.user.domain.entity.User;
 import carrotTeam.carrot.domain.user.domain.repositorty.UserRepository;
 import carrotTeam.carrot.domain.user.dto.UserCreateRequest;
@@ -16,39 +17,37 @@ import javax.persistence.EntityNotFoundException;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
+  private final UserRepository userRepository;
+  private final UserMapper userMapper;
 
-    public UserInfo createUser(UserCreateRequest userCreateRequest){
-        User newUser = userMapper.mapCreateUserToEntity(userCreateRequest);
-        User savedUser = userRepository.save(newUser);
-        return userMapper.mapUserEntityToUserInfo(savedUser);
-    }
-    public UserInfo findUserId(Long id){
-        User findUser = userRepository.findById(id)
-                .orElseThrow(NotFoundUser::new);
-        return userMapper.mapUserEntityToUserInfo(findUser);
-    }
-    public UserInfo updateUser(UserUpdateRequest userUpdateRequest){
-        User findUser = userRepository.findById(userUpdateRequest.getId())
-                .orElseThrow(NotFoundUser::new);
-        findUser.update(userUpdateRequest);
-        User savedUser = userRepository.save(findUser);
-        return userMapper.mapUserEntityToUserInfo(savedUser);
-    }
-    public UserInfo DeleteUser(Long id){
-        User findUser = userRepository.findById(id)
-                .orElseThrow(NotFoundUser::new);
-        findUser.delete();
-        userRepository.save(findUser);
-        return userMapper.mapUserEntityToUserInfo(findUser);
-    }
+  public UserInfo createUser(UserCreateRequest userCreateRequest) {
+    User newUser = userMapper.mapCreateUserToEntity(userCreateRequest);
+    User savedUser = userRepository.save(newUser);
+    return userMapper.mapUserEntityToUserInfo(savedUser);
+  }
 
-    private User getUserById(Long userId) {
+  public UserInfo findUserId(Long id) {
+    User findUser = userRepository.findById(id).orElseThrow(NotFoundUser::new);
+    return userMapper.mapUserEntityToUserInfo(findUser);
+  }
 
-        return userRepository.findById(userId).orElseThrow(NotFoundUser::new);
-    }
+  public UserInfo updateUser(UserUpdateRequest userUpdateRequest) {
+    User findUser =
+        userRepository.findById(userUpdateRequest.getId()).orElseThrow(NotFoundUser::new);
+    findUser.update(userUpdateRequest);
+    User savedUser = userRepository.save(findUser);
+    return userMapper.mapUserEntityToUserInfo(savedUser);
+  }
 
+  public UserInfo DeleteUser(Long id) {
+    User findUser = userRepository.findById(id).orElseThrow(NotFoundUser::new);
+    findUser.delete();
+    userRepository.save(findUser);
+    return userMapper.mapUserEntityToUserInfo(findUser);
+  }
 
+  private User getUserById(Long userId) {
+
+    return userRepository.findById(userId).orElseThrow(NotFoundUser::new);
+  }
 }
-
