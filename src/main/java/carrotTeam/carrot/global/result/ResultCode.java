@@ -10,7 +10,10 @@ import lombok.Getter;
 public enum ResultCode {
 
     // user
-
+    CREATE_USER_SUCCESS("U001", "200","유저가 생성되었습니다!"),
+    GET_ONE_POST_USER_SUCCESS("U002", "200","유저의 정보를 조회하였습니다!"),
+    PUT_USER_SUCCESS("U003", "200", "유저의 정보를 변경하였습니다."),
+    DELETE_USER_SUCCESS("U004", "200", "유저의 정보를 삭제하였습니다!"),
     // post
 
     // comment
