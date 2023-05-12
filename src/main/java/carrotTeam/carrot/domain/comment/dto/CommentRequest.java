@@ -23,6 +23,9 @@ public class CommentRequest {
   @Schema(description = "post 아이디")
   private Long post_id;
 
+  @Schema(description = "parent_comment 아이디")
+  private Long parent_id;
+
   @Schema(description = "comment 내용")
   @NotBlank(message = "댓글을 작성해주세요!")
   private String content;
