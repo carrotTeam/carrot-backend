@@ -16,7 +16,6 @@ public class RedisPost implements Serializable {
     @Id
     private Long id;
     private Long viewCount;
-    private LocalDateTime lastUpdatedTime;
 
     public RedisPost() {
         this.viewCount = 0L;
@@ -24,6 +23,9 @@ public class RedisPost implements Serializable {
 
     public void increaseViewCount() {
         this.viewCount++;
-        this.lastUpdatedTime = LocalDateTime.now();
+    }
+
+    public void cleanViewCount() {
+        this.viewCount = 0L;
     }
 }

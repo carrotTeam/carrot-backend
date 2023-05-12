@@ -94,6 +94,7 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+    /////////////////////////////////////////////////
     public void increaseView(Long id) {
         RedisPost redisPost = redisTemplate.opsForValue().get(id.toString());
         if (redisPost == null) {
@@ -113,20 +114,25 @@ public class PostService {
 
     //@Scheduled(fixedDelay = 5000)
     public void flushViews() {
-        LocalDateTime lastUpdatedTime = LocalDateTime.now().minusSeconds(5);
+        //LocalDateTime lastUpdatedTime = LocalDateTime.now().minusSeconds(5);
         Set<String> keys = redisTemplate.keys("*");
-        // key 전체 받아왔으니까 반복문으로 돌리던가 stream으로 돌려서 시간 이후 찾아서 sql에 업데이트
+
+        Map<String, Object> redisHash = new HashMap<>();
 
         for (String s : keys) {
-
+            redisHash.put(s, redisTemplate.opsForValue().get(s));
         }
 
-        Map<Object, Object> redisHash = redisTemplate.opsForHash().entries("*");
-
+        //  레디스에서 조회수 변경이 있는 id만 찾아서 리스트로 제작
         List<RedisPost> redisPosts = redisHash.values().stream()
                 .map(obj -> (RedisPost) obj)
-                .filter(redisPost -> redisPost.getLastUpdatedTime().isAfter(lastUpdatedTime))
+                .filter(redisPost -> redisPost.getViewCount() != 0)
                 .collect(Collectors.toList());
+
+        for (Object key : keys) {
+            RedisPost redisPost = redisTemplate.opsForValue().get(key.toString());
+            redisPost.cleanViewCount();
+        }
 
         redisPosts.forEach(redisPost -> {
             Post post = postRepository.findById(redisPost.getId())
