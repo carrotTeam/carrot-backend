@@ -3,14 +3,19 @@ package carrotTeam.carrot.domain.comment.domain.entity;
 import carrotTeam.carrot.domain.post.domain.entity.Post;
 import carrotTeam.carrot.domain.user.domain.entity.User;
 import carrotTeam.carrot.global.common.BaseEntity;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -40,8 +45,6 @@ public class Comment extends BaseEntity {
   @JoinColumn(name = "parent_id")
   private Comment parentComment;
 
-//    @OneToMany(mappedBy = "parentComment",)
-//    private List<Comment> childrenComment = new ArrayList<>();
 
   @Builder
   private Comment(String content, Post post, User user) {
