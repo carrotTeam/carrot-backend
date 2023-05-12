@@ -5,8 +5,11 @@ import carrotTeam.carrot.domain.post.dto.PostRequest;
 import carrotTeam.carrot.domain.post.dto.PostUpdateRequest;
 import carrotTeam.carrot.domain.post.service.PostService;
 
+import carrotTeam.carrot.global.result.ResultCode;
+import carrotTeam.carrot.global.result.ResultResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +25,7 @@ public class PostController {
     private final PostService service;
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public PostInfo creatPost (
+    public ResponseEntity<ResultResponse> creatPost (
             @RequestPart(value = "files", required=true) List<MultipartFile> files,
             @RequestPart(value = "requestDto") PostRequest request
     ) throws Exception {
@@ -33,36 +36,41 @@ public class PostController {
             address_list.add(picture_address);
         }
 
-        return service.createPost(request.getUser_id(), request.getTitle(), request.getContent(), address_list);
+        PostInfo postInfo = service.createPost(request.getUser_id(), request.getTitle(), request.getContent(), address_list);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_POST_SUCCESS, postInfo));
     }
 
 
     @PutMapping
-    public PostInfo updatePost (
+    public ResponseEntity<ResultResponse> updatePost (
             @RequestBody PostUpdateRequest request
     ) throws IOException {
-        return service.updatePost(request.getPost_id(), request.getTitle(), request.getContent());
+        PostInfo postInfo = service.updatePost(request.getPost_id(), request.getTitle(), request.getContent());
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_POST_SUCCESS, postInfo));
     }
 
     @DeleteMapping("/{id}")
-    public PostInfo updatePost (
+    public ResponseEntity<ResultResponse> deletePost (
             @PathVariable Long id
     ) throws IOException {
-        return service.deletePost(id);
+        PostInfo postInfo = service.deletePost(id);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_POST_SUCCESS, postInfo));
     }
 
     @GetMapping
-    public List<PostInfo> findTotalPost (
+    public ResponseEntity<ResultResponse> findTotalPost (
 
     ) throws IOException {
-        return service.findTotal();
+        List<PostInfo> postList = service.findTotal();
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_ALL_POST_SUCCESS, postList));
     }
 
     @GetMapping("users/{id}")
-    public List<PostInfo> findByUserIdPost (
+    public ResponseEntity<ResultResponse> findByUserIdPost (
             @PathVariable Long id
     ) throws IOException {
-        return service.findByUserId(id);
+        List<PostInfo> postList = service.findByUserId(id);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_USER_POST_SUCCESS, postList));
     }
 
     @GetMapping("/{id}")
@@ -73,10 +81,11 @@ public class PostController {
     }
 
     @GetMapping("/word/{word}")
-    public List<PostInfo> findTotalRestaurant (
+    public ResponseEntity<ResultResponse> findTotalRestaurant (
             @RequestParam String word
     ) throws IOException {
-        return service.findByWord(word);
+        List<PostInfo> postList = service.findByWord(word);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_USER_POST_SUCCESS, postList));
     }
 
 
