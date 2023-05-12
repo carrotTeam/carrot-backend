@@ -4,9 +4,11 @@ import carrotTeam.carrot.domain.post.domain.entity.Post;
 import carrotTeam.carrot.domain.post.domain.repository.PostRepository;
 import carrotTeam.carrot.domain.post.dto.PostInfo;
 import carrotTeam.carrot.domain.post.dto.PostRequest;
+import carrotTeam.carrot.domain.post.exception.NotFoundPost;
 import carrotTeam.carrot.domain.post.mapper.PostMapper;
 import carrotTeam.carrot.domain.user.domain.entity.User;
 import carrotTeam.carrot.domain.user.domain.repositorty.UserRepository;
+import carrotTeam.carrot.domain.user.exception.NotFoundUser;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -48,7 +51,12 @@ public class PostService {
     }
 
     public PostInfo createPost(Long user_id, String title, String content, List<String> address_list) {
-        User user = userRepository.findById(user_id).orElseThrow(null);
+
+        if(!userRepository.existsById(user_id)) {
+            throw new NotFoundUser();
+        }
+
+        User user = userRepository.findById(user_id).get();
         Post post = Post.builder()
                 .title(title)
                 .content(content)
@@ -60,36 +68,42 @@ public class PostService {
     }
 
     public PostInfo updatePost(Long id, String title, String content) {
-        Post post = postRepository.findById(id).orElseThrow(null);
+        Post post = postRepository.findById(id).orElseThrow(NotFoundPost::new);
         post.update(title, content);
         postRepository.save(post);
         return postMapper.mapPostEntityToPostInfo(post);
     }
 
+    @Transactional
     public PostInfo deletePost(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(null);
+        Post post = postRepository.findById(id).orElseThrow(NotFoundPost::new);
+        if(!post.getIsActive()){
+            throw new NotFoundPost();
+        }
         post.delete();
         postRepository.save(post);
         return postMapper.mapPostEntityToPostInfo(post);
     }
 
     public List<PostInfo> findTotal() {
-        return postRepository.findAllByIsActive(true)
-                .stream()
+        return postRepository.findAllByIsActive(true).stream()
                 .map(PostInfo::of)
                 .collect(Collectors.toList());
     }
 
-    public List<PostInfo> findByUserId(Long id) {
-        return postRepository.findByUserIdAndIsActive(id, true)
-                .stream()
+    public List<PostInfo> findByUserId(Long user_id) {
+
+        if(!userRepository.existsById(user_id)) {
+            throw new NotFoundUser();
+        }
+
+        return postRepository.findByUserIdAndIsActive(user_id, true).stream()
                 .map(PostInfo::of)
                 .collect(Collectors.toList());
     }
 
     public List<PostInfo> findByPostId(Long id) {
-        return postRepository.findByPostIdAndIsActive(id, true)
-                .stream()
+        return postRepository.findByPostIdAndIsActive(id, true).stream()
                 .map(PostInfo::of)
                 .collect(Collectors.toList());
     }
