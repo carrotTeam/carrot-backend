@@ -46,9 +46,9 @@ public class PostMapper {
 
       count_comment++;
 
-        if (count_comment == 3) {
-            break;
-        }
+      if (count_comment == 3) {
+        break;
+      }
     }
 
     return PostInfoWithComment.builder()
