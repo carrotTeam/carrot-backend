@@ -15,14 +15,15 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class PostInfoWithComment {
-    private Long user_id;
-    private String title;
-    private String content;
-    private List<String> picture_address;
-    private Boolean isActive;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private List<String> comment;
+
+  private Long user_id;
+  private String title;
+  private String content;
+  private List<String> picture_address;
+  private Boolean isActive;
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
+  private List<String> comment;
 
 }
 

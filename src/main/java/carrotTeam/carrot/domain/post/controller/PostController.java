@@ -23,71 +23,73 @@ import java.util.List;
 @RestController
 public class PostController {
 
-    private final PostService service;
+  private final PostService service;
 
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<ResultResponse> creatPost (
-            @RequestPart(value = "files", required=true) List<MultipartFile> files,
-            @RequestPart(value = "requestDto") PostRequest request
-    ) throws Exception {
-        List<String> address_list = new ArrayList<>();
+  @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<ResultResponse> creatPost(
+      @RequestPart(value = "files", required = true) List<MultipartFile> files,
+      @RequestPart(value = "requestDto") PostRequest request
+  ) throws Exception {
+    List<String> address_list = new ArrayList<>();
 
-        for(MultipartFile file : files) {
-            String picture_address = service.upload(file);
-            address_list.add(picture_address);
-        }
-
-        PostInfo postInfo = service.createPost(request.getUser_id(), request.getTitle(), request.getContent(), address_list);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_POST_SUCCESS, postInfo));
+    for (MultipartFile file : files) {
+      String picture_address = service.upload(file);
+      address_list.add(picture_address);
     }
 
+    PostInfo postInfo = service.createPost(request.getUser_id(), request.getTitle(),
+        request.getContent(), address_list);
+    return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_POST_SUCCESS, postInfo));
+  }
 
-    @PutMapping
-    public ResponseEntity<ResultResponse> updatePost (
-            @RequestBody PostUpdateRequest request
-    ) throws IOException {
-        PostInfo postInfo = service.updatePost(request.getPost_id(), request.getTitle(), request.getContent());
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_POST_SUCCESS, postInfo));
-    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ResultResponse> deletePost (
-            @PathVariable Long id
-    ) throws IOException {
-        PostInfo postInfo = service.deletePost(id);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_POST_SUCCESS, postInfo));
-    }
+  @PutMapping
+  public ResponseEntity<ResultResponse> updatePost(
+      @RequestBody PostUpdateRequest request
+  ) throws IOException {
+    PostInfo postInfo = service.updatePost(request.getPost_id(), request.getTitle(),
+        request.getContent());
+    return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_POST_SUCCESS, postInfo));
+  }
 
-    @GetMapping
-    public ResponseEntity<ResultResponse> findTotalPost (
+  @DeleteMapping("/{id}")
+  public ResponseEntity<ResultResponse> deletePost(
+      @PathVariable Long id
+  ) throws IOException {
+    PostInfo postInfo = service.deletePost(id);
+    return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_POST_SUCCESS, postInfo));
+  }
 
-    ) throws IOException {
-        List<PostInfo> postList = service.findTotal();
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_ALL_POST_SUCCESS, postList));
-    }
+  @GetMapping
+  public ResponseEntity<ResultResponse> findTotalPost(
 
-    @GetMapping("users/{id}")
-    public ResponseEntity<ResultResponse> findByUserIdPost (
-            @PathVariable Long id
-    ) throws IOException {
-        List<PostInfo> postList = service.findByUserId(id);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_USER_POST_SUCCESS, postList));
-    }
+  ) throws IOException {
+    List<PostInfo> postList = service.findTotal();
+    return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_ALL_POST_SUCCESS, postList));
+  }
 
-    @GetMapping("/{id}")
-    public PostInfoWithComment findByPostIdPost (
-            @PathVariable Long id
-    ) throws IOException {
-        return service.findByPostId(id);
-    }
+  @GetMapping("users/{id}")
+  public ResponseEntity<ResultResponse> findByUserIdPost(
+      @PathVariable Long id
+  ) throws IOException {
+    List<PostInfo> postList = service.findByUserId(id);
+    return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_USER_POST_SUCCESS, postList));
+  }
 
-    @GetMapping("/word/{word}")
-    public ResponseEntity<ResultResponse> findTotalRestaurant (
-            @RequestParam String word
-    ) throws IOException {
-        List<PostInfo> postList = service.findByWord(word);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_USER_POST_SUCCESS, postList));
-    }
+  @GetMapping("/{id}")
+  public PostInfoWithComment findByPostIdPost(
+      @PathVariable Long id
+  ) throws IOException {
+    return service.findByPostId(id);
+  }
+
+  @GetMapping("/word/{word}")
+  public ResponseEntity<ResultResponse> findTotalRestaurant(
+      @RequestParam String word
+  ) throws IOException {
+    List<PostInfo> postList = service.findByWord(word);
+    return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_USER_POST_SUCCESS, postList));
+  }
 
 
 }

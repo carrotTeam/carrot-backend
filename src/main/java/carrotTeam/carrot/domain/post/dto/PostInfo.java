@@ -14,23 +14,24 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class PostInfo {
-    private Long user_id;
-    private String title;
-    private String content;
-    private List<String> picture_address;
-    private Boolean isActive;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
-    public static PostInfo of(Post entity) {
-        return PostInfo.builder()
-                .user_id(entity.getUser().getId())
-                .title(entity.getTitle())
-                .content(entity.getContent())
-                .picture_address(entity.getPicture_address())
-                .isActive(entity.getIsActive())
-                .createdAt(entity.getCreatedAt())
-                .updatedAt(entity.getUpdatedAt())
-                .build();
-    }
+  private Long user_id;
+  private String title;
+  private String content;
+  private List<String> picture_address;
+  private Boolean isActive;
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
+
+  public static PostInfo of(Post entity) {
+    return PostInfo.builder()
+        .user_id(entity.getUser().getId())
+        .title(entity.getTitle())
+        .content(entity.getContent())
+        .picture_address(entity.getPicture_address())
+        .isActive(entity.getIsActive())
+        .createdAt(entity.getCreatedAt())
+        .updatedAt(entity.getUpdatedAt())
+        .build();
+  }
 }
