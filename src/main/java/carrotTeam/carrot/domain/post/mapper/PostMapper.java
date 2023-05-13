@@ -4,8 +4,8 @@ import carrotTeam.carrot.domain.comment.domain.entity.Comment;
 import carrotTeam.carrot.domain.post.domain.entity.Post;
 import carrotTeam.carrot.domain.post.dto.PostInfo;
 import carrotTeam.carrot.domain.post.dto.PostInfoWithComment;
-import carrotTeam.carrot.domain.post.dto.PostRequest;
-import carrotTeam.carrot.domain.user.dto.UserCreateRequest;
+import java.util.Comparator;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -25,9 +25,21 @@ public class PostMapper {
   public PostInfoWithComment mapPostEntityToPostInfoWithComment(Post post) {
 
     ArrayList<String> three_comment_list = new ArrayList<>();
+    List<Comment> post_comment = post.getComment();
+
+    post_comment.sort(new Comparator<Comment>() {
+      @Override
+      public int compare(Comment o1, Comment o2) {
+        if (o1.getCreatedAt().compareTo(o2.getCreatedAt()) <= 0) {
+          return 1;
+        }
+        return -1;
+      }
+    });
+
     int count_comment = 0;
 
-    for (Comment c : post.getComment()) {
+    for (Comment c : post_comment) {
       String id_content =
           "comment_user_id : " + c.getId() + ", comment_content : " + c.getContent();
       three_comment_list.add(id_content);
