@@ -1,5 +1,6 @@
 package carrotTeam.carrot.domain.post.domain.entity;
 
+import carrotTeam.carrot.domain.comment.domain.entity.Comment;
 import carrotTeam.carrot.domain.user.domain.entity.User;
 import carrotTeam.carrot.global.common.BaseEntity;
 import lombok.Builder;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,12 +34,16 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Comment> comment = new ArrayList<>();
+
     @Builder
-    public Post(User user, String title, String content, List<String> picture_address) {
+    public Post(User user, String title, String content, List<String> picture_address, List<Comment> comment) {
         this.user = user;
         this.title = title;
         this.content = content;
         this.picture_address = picture_address;
+        this.comment = comment;
     }
 
     public void update (String title, String content) {
