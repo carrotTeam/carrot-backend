@@ -52,10 +52,11 @@ public class Comment extends BaseEntity {
   private List<Comment> childrenComment = new ArrayList<>();
 
   @Builder
-  private Comment(String content, Post post, User user) {
+  private Comment(String content, Post post, User user, Comment parentComment) {
     this.content = content;
     this.post = post;
     this.user = user;
+    this.parentComment = parentComment;
   }
 
 }
