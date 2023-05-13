@@ -42,10 +42,17 @@ public class CommentService {
     User findUser = getUserById(commentRequest.getUser_id());
     Post findPost = getPostById(commentRequest.getPost_id());
 
+    Comment findParent = null;
+    if (commentRequest.getParent_id() != null) {
+      findParent = commentRepository.findById(commentRequest.getParent_id())
+          .orElseThrow(NotFoundComment::new);
+    }
+
     return Comment.builder()
         .user(findUser)
         .post(findPost)
         .content(commentRequest.getContent())
+        .parentComment(findParent)
         .build();
   }
 
