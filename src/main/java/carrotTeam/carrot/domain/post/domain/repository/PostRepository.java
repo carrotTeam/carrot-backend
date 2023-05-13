@@ -16,7 +16,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByUserIdAndIsActive(Long id, Boolean isActive);
 
     @Query(value = "SELECT p FROM Post p WHERE p.id = :id AND p.isActive = :isActive")
-    List<Post> findByPostIdAndIsActive(Long id, Boolean isActive);
+    Post findByPostIdAndIsActive(Long id, Boolean isActive);
 
     @Query(value = "SELECT p FROM Post p WHERE (p.title LIKE %:word% OR p.content LIKE %:word%) AND p.isActive = :isActive")
     List<Post> findByWordAndIsActive(String word, Boolean isActive);
