@@ -1,10 +1,12 @@
 package carrotTeam.carrot.domain.post.service;
 
+import carrotTeam.carrot.domain.comment.domain.entity.Comment;
+import carrotTeam.carrot.domain.comment.domain.repository.CommentRepository;
+import carrotTeam.carrot.domain.comment.exception.NotFoundComment;
 import carrotTeam.carrot.domain.post.domain.entity.Post;
 import carrotTeam.carrot.domain.post.domain.repository.PostRepository;
 import carrotTeam.carrot.domain.post.dto.PostInfo;
 import carrotTeam.carrot.domain.post.dto.PostInfoWithComment;
-import carrotTeam.carrot.domain.post.dto.PostRequest;
 import carrotTeam.carrot.domain.post.exception.NotFoundPost;
 import carrotTeam.carrot.domain.post.mapper.PostMapper;
 import carrotTeam.carrot.domain.user.domain.entity.User;
@@ -12,6 +14,7 @@ import carrotTeam.carrot.domain.user.domain.repositorty.UserRepository;
 import carrotTeam.carrot.domain.user.exception.NotFoundUser;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +32,7 @@ public class PostService {
 
   private final PostRepository postRepository;
   private final UserRepository userRepository;
-
+  private final CommentRepository commentRepository;
   private final PostMapper postMapper;
 
   @Value("${cloud.aws.s3.bucket}")
@@ -79,12 +82,31 @@ public class PostService {
 
   @Transactional
   public PostInfo deletePost(Long id) {
+    ArrayList<Long> comment_list = new ArrayList<>();
+    // post 지우기
     Post post = postRepository.findById(id).orElseThrow(NotFoundPost::new);
     if (!post.getIsActive()) {
       throw new NotFoundPost();
     }
+
+    for (Comment c : post.getComment()) {
+      comment_list.add(c.getId()); // post 붙은 commeNt_id 리스트
+    }
+
     post.delete();
     postRepository.save(post);
+
+    //post 연관된 comment 지우기
+    for (Long comment_id : comment_list) {
+      Comment foundComment = commentRepository.findById(comment_id).orElseThrow(
+          NotFoundComment::new);
+      if (!foundComment.getIsActive()) {
+        throw new NotFoundComment();
+      }
+      foundComment.delete();
+      commentRepository.save(foundComment);
+    }
+
     return postMapper.mapPostEntityToPostInfo(post);
   }
 
