@@ -3,6 +3,7 @@ package carrotTeam.carrot.domain.post.service;
 import carrotTeam.carrot.domain.post.domain.entity.Post;
 import carrotTeam.carrot.domain.post.domain.repository.PostRepository;
 import carrotTeam.carrot.domain.post.dto.PostInfo;
+import carrotTeam.carrot.domain.post.dto.PostInfoWithComment;
 import carrotTeam.carrot.domain.post.dto.PostRequest;
 import carrotTeam.carrot.domain.post.exception.NotFoundPost;
 import carrotTeam.carrot.domain.post.mapper.PostMapper;
@@ -102,10 +103,10 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public List<PostInfo> findByPostId(Long id) {
-        return postRepository.findByPostIdAndIsActive(id, true).stream()
-                .map(PostInfo::of)
-                .collect(Collectors.toList());
+    public PostInfoWithComment findByPostId(Long id) {
+        Post post = postRepository.findByPostIdAndIsActive(id, true);
+        return postMapper.mapPostEntityToPostInfoWithComment(post);
+
     }
 
     public List<PostInfo> findByWord(String word) {

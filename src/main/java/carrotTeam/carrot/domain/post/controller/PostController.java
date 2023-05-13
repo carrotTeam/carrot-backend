@@ -1,6 +1,7 @@
 package carrotTeam.carrot.domain.post.controller;
 
 import carrotTeam.carrot.domain.post.dto.PostInfo;
+import carrotTeam.carrot.domain.post.dto.PostInfoWithComment;
 import carrotTeam.carrot.domain.post.dto.PostRequest;
 import carrotTeam.carrot.domain.post.dto.PostUpdateRequest;
 import carrotTeam.carrot.domain.post.service.PostService;
@@ -74,7 +75,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public List<PostInfo> findByPostIdPost (
+    public PostInfoWithComment findByPostIdPost (
             @PathVariable Long id
     ) throws IOException {
         return service.findByPostId(id);
