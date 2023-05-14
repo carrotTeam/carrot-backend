@@ -4,6 +4,7 @@ import carrotTeam.carrot.domain.comment.domain.entity.Comment;
 import carrotTeam.carrot.domain.post.domain.entity.Post;
 import carrotTeam.carrot.domain.post.dto.PostInfo;
 import carrotTeam.carrot.domain.post.dto.PostInfoWithComment;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -27,15 +28,7 @@ public class PostMapper {
     ArrayList<String> three_comment_list = new ArrayList<>();
     List<Comment> post_comment = post.getComment();
 
-    post_comment.sort(new Comparator<Comment>() {
-      @Override
-      public int compare(Comment o1, Comment o2) {
-        if (o1.getCreatedAt().compareTo(o2.getCreatedAt()) <= 0) {
-          return 1;
-        }
-        return -1;
-      }
-    });
+    Collections.sort(post_comment, (Comment o1, Comment o2) -> -(o1.getCreatedAt().compareTo(o2.getCreatedAt())));
 
     int count_comment = 0;
 
