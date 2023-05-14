@@ -28,7 +28,8 @@ public class PostMapper {
     ArrayList<String> three_comment_list = new ArrayList<>();
     List<Comment> post_comment = post.getComment();
 
-    Collections.sort(post_comment, (Comment o1, Comment o2) -> -(o1.getCreatedAt().compareTo(o2.getCreatedAt())));
+    Collections.sort(post_comment,
+        (Comment o1, Comment o2) -> -(o1.getCreatedAt().compareTo(o2.getCreatedAt())));
 
     int count_comment = 0;
 

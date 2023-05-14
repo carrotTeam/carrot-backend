@@ -42,7 +42,7 @@ public class PostService {
 
   private final AmazonS3 amazonS3;
 
-  public String upload(MultipartFile multipartFile)  {
+  public String upload(MultipartFile multipartFile) {
     // 파일 이름 중복 X -> UUID 로 생성한 랜덤 값에 파일이름 연결
     String s3FileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
 
@@ -55,7 +55,7 @@ public class PostService {
       // S3 API 메소드인 putObject 사용하여 파일 Stream 을 열어서 S3에 파일을 업로드
       amazonS3.putObject(bucket, s3FileName, multipartFile.getInputStream(), objMeta);
     } catch (IOException e) {
-      throw  new NotUploadPost();
+      throw new NotUploadPost();
     }
 
     // getUrl 메소드를 통해서 S3에 업로드된 사진 URL을 가져오는 방식
@@ -80,7 +80,8 @@ public class PostService {
     return postMapper.mapPostEntityToPostInfo(post);
   }
 
-  public PostInfo updatePost(Long user_id, Long post_id, String title, String content, List<String> address_list) {
+  public PostInfo updatePost(Long user_id, Long post_id, String title, String content,
+      List<String> address_list) {
 
     Post post = postRepository.findById(post_id).orElseThrow(NotFoundPost::new);
 
