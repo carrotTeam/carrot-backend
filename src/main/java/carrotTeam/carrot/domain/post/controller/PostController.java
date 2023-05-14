@@ -26,9 +26,9 @@ public class PostController {
   private final PostService service;
 
   @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<ResultResponse> creatPost(
+  public ResponseEntity<ResultResponse> createPost(
       @RequestPart(value = "files", required = true) List<MultipartFile> files,
-      @RequestPart(value = "requestDto") PostRequest request
+      @RequestPart(value = "requestDto") PostRequest postRequest
   ) throws Exception {
     List<String> address_list = new ArrayList<>();
 
@@ -37,18 +37,19 @@ public class PostController {
       address_list.add(picture_address);
     }
 
-    PostInfo postInfo = service.createPost(request.getUser_id(), request.getTitle(),
-        request.getContent(), address_list);
+    PostInfo postInfo = service.createPost(postRequest.getUser_id(), postRequest.getTitle(),
+        postRequest.getContent(), address_list);
     return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_POST_SUCCESS, postInfo));
   }
 
 
   @PutMapping
   public ResponseEntity<ResultResponse> updatePost(
-      @RequestBody PostUpdateRequest request
+      @RequestBody PostUpdateRequest postUpdateRequest
   ) throws IOException {
-    PostInfo postInfo = service.updatePost(request.getPost_id(), request.getTitle(),
-        request.getContent());
+    PostInfo postInfo = service.updatePost(postUpdateRequest.getPost_id(),
+        postUpdateRequest.getTitle(),
+        postUpdateRequest.getContent());
     return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_POST_SUCCESS, postInfo));
   }
 
