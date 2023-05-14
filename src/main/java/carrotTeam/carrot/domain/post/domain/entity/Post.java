@@ -17,7 +17,7 @@ import java.util.List;
 public class Post extends BaseEntity {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "post_id", nullable = false)
   private Long id;
 
@@ -48,8 +48,9 @@ public class Post extends BaseEntity {
     this.comment = comment;
   }
 
-  public void update(String title, String content) {
+  public void update(String title, String content, List<String> picture_address) {
     this.title = title;
     this.content = content;
+    this.picture_address = picture_address;
   }
 }
