@@ -122,19 +122,19 @@ public class PostService {
       throw new NotFoundUser();
     }
 
-    return postRepository.findByUserIdAndIsActive(user_id, true).stream()
+    return postRepository.findByUserIdAndIsActive(user_id).stream()
         .map(PostInfo::of)
         .collect(Collectors.toList());
   }
 
   public PostInfoWithComment findByPostId(Long id) {
-    Post post = postRepository.findByPostIdAndIsActive(id, true);
+    Post post = postRepository.findByPostIdAndIsActive(id);
     return postMapper.mapPostEntityToPostInfoWithComment(post);
 
   }
 
   public List<PostInfo> findByWord(String word) {
-    return postRepository.findByWordAndIsActive(word, true)
+    return postRepository.findByWordAndIsActive(word)
         .stream()
         .map(PostInfo::of)
         .collect(Collectors.toList());
