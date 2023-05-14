@@ -8,6 +8,7 @@ import carrotTeam.carrot.domain.post.domain.repository.PostRepository;
 import carrotTeam.carrot.domain.post.dto.PostInfo;
 import carrotTeam.carrot.domain.post.dto.PostInfoWithComment;
 import carrotTeam.carrot.domain.post.exception.NotFoundPost;
+import carrotTeam.carrot.domain.post.exception.NotUpdatePost;
 import carrotTeam.carrot.domain.post.exception.NotUploadPost;
 import carrotTeam.carrot.domain.post.mapper.PostMapper;
 import carrotTeam.carrot.domain.user.domain.entity.User;
@@ -79,9 +80,15 @@ public class PostService {
     return postMapper.mapPostEntityToPostInfo(post);
   }
 
-  public PostInfo updatePost(Long id, String title, String content) {
-    Post post = postRepository.findById(id).orElseThrow(NotFoundPost::new);
-    post.update(title, content);
+  public PostInfo updatePost(Long user_id, Long post_id, String title, String content, List<String> address_list) {
+
+    Post post = postRepository.findById(post_id).orElseThrow(NotFoundPost::new);
+
+    if (post.getUser().getId() != user_id) {
+      throw new NotUpdatePost();
+    }
+
+    post.update(title, content, address_list);
     postRepository.save(post);
     return postMapper.mapPostEntityToPostInfo(post);
   }
@@ -91,6 +98,11 @@ public class PostService {
     ArrayList<Long> comment_list = new ArrayList<>();
     // post 지우기
     Post post = postRepository.findById(id).orElseThrow(NotFoundPost::new);
+
+    if (post.getUser().getId() != id) {
+      throw new NotUpdatePost();
+    }
+
     if (!post.getIsActive()) {
       throw new NotFoundPost();
     }
