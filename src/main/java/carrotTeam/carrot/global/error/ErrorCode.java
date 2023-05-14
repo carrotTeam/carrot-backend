@@ -17,6 +17,7 @@ public enum ErrorCode {
 
     // Post
     POST_NOT_FOUND(400, "P001","게시글이 존재하지 않습니다!"),
+    POST_NOT_UPLOAD(400, "P002","게시글이 업로드에 실패하였습니다!"),
 
     // Comment
     COMMENT_NOT_FOUND(400,"C001","댓글이 존재하지 않습니다!")
