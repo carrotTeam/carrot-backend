@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class PostController {
   public ResponseEntity<ResultResponse> createPost(
       @RequestPart(value = "files", required = true) List<MultipartFile> files,
       @RequestPart(value = "requestDto") PostRequest postRequest
-  ) throws Exception {
+  ) {
     List<String> address_list = new ArrayList<>();
 
     for (MultipartFile file : files) {
@@ -46,7 +45,7 @@ public class PostController {
   @PutMapping
   public ResponseEntity<ResultResponse> updatePost(
       @RequestBody PostUpdateRequest postUpdateRequest
-  ) throws IOException {
+  ) {
     PostInfo postInfo = service.updatePost(postUpdateRequest.getPost_id(),
         postUpdateRequest.getTitle(),
         postUpdateRequest.getContent());
@@ -56,7 +55,7 @@ public class PostController {
   @DeleteMapping("/{id}")
   public ResponseEntity<ResultResponse> deletePost(
       @PathVariable Long id
-  ) throws IOException {
+  ) {
     PostInfo postInfo = service.deletePost(id);
     return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_POST_SUCCESS, postInfo));
   }
@@ -64,7 +63,7 @@ public class PostController {
   @GetMapping
   public ResponseEntity<ResultResponse> findTotalPost(
 
-  ) throws IOException {
+  ) {
     List<PostInfo> postList = service.findTotal();
     return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_ALL_POST_SUCCESS, postList));
   }
@@ -72,7 +71,7 @@ public class PostController {
   @GetMapping("users/{id}")
   public ResponseEntity<ResultResponse> findByUserIdPost(
       @PathVariable Long id
-  ) throws IOException {
+  ) {
     List<PostInfo> postList = service.findByUserId(id);
     return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_USER_POST_SUCCESS, postList));
   }
@@ -80,14 +79,14 @@ public class PostController {
   @GetMapping("/{id}")
   public PostInfoWithComment findByPostIdPost(
       @PathVariable Long id
-  ) throws IOException {
+  ) {
     return service.findByPostId(id);
   }
 
   @GetMapping("/word/{word}")
   public ResponseEntity<ResultResponse> findTotalRestaurant(
       @RequestParam String word
-  ) throws IOException {
+  ) {
     List<PostInfo> postList = service.findByWord(word);
     return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_USER_POST_SUCCESS, postList));
   }
