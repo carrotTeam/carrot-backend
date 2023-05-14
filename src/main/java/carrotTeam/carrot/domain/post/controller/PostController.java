@@ -20,9 +20,9 @@ public class PostController {
     private final PostService service;
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public PostInfo creatPost (
+    public PostInfo createPost (
             @RequestPart(value = "files", required=true) List<MultipartFile> files,
-            @RequestPart(value = "requestDto") PostRequest request
+            @RequestPart(value = "requestDto") PostRequest postRequest
     ) throws Exception {
 
         List<String> address_list = new ArrayList<>();
@@ -32,14 +32,14 @@ public class PostController {
             address_list.add(picture_address);
         }
 
-        return service.createPost(request.getUser_id(), request.getTitle(), request.getContent(), address_list);
+        return service.createPost(postRequest.getUser_id(), postRequest.getTitle(), postRequest.getContent(), address_list);
     }
 
     @PutMapping
     public PostInfo updatePost (
-            @RequestBody PostUpdateRequest request
+            @RequestBody PostUpdateRequest postUpdateRequest
     ) throws IOException {
-        return service.updatePost(request.getPost_id(), request.getTitle(), request.getContent());
+        return service.updatePost(postUpdateRequest.getPost_id(), postUpdateRequest.getTitle(), postUpdateRequest.getContent());
     }
 
     @DeleteMapping("/{id}")
