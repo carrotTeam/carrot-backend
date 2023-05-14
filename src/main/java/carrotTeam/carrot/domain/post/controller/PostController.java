@@ -44,11 +44,19 @@ public class PostController {
 
   @PutMapping
   public ResponseEntity<ResultResponse> updatePost(
-      @RequestBody PostUpdateRequest postUpdateRequest
+      @RequestPart(value = "files", required = true) List<MultipartFile> files,
+      @RequestPart(value = "requestDto") PostUpdateRequest postUpdateRequest
   ) {
-    PostInfo postInfo = service.updatePost(postUpdateRequest.getPost_id(),
+    List<String> address_list = new ArrayList<>();
+
+    for (MultipartFile file : files) {
+      String picture_address = service.upload(file);
+      address_list.add(picture_address);
+    }
+
+    PostInfo postInfo = service.updatePost(postUpdateRequest.getUser_id(), postUpdateRequest.getPost_id(),
         postUpdateRequest.getTitle(),
-        postUpdateRequest.getContent());
+        postUpdateRequest.getContent(), address_list);
     return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_POST_SUCCESS, postInfo));
   }
 
