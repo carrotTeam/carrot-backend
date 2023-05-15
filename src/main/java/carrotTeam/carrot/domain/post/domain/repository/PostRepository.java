@@ -10,11 +10,14 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    List<Post> findAllByIsActive(Boolean isActive);
+  List<Post> findAllByIsActive(Boolean isActive);
 
-    @Query(value = "SELECT p FROM Post p WHERE p.user.id = :id AND p.isActive = :isActive")
-    List<Post> findByIdAndIsActive(Long id, Boolean isActive);
+  @Query(value = "SELECT p FROM Post p WHERE p.user.id = :id AND p.isActive = true")
+  List<Post> findByUserIdAndIsActive(Long id);
 
-    @Query(value = "SELECT p FROM Post p WHERE (p.title LIKE %:word% OR p.content LIKE %:word%) AND p.isActive = :isActive")
-    List<Post> findByWordAndIsActive(String word, Boolean isActive);
+  @Query(value = "SELECT p FROM Post p WHERE p.id = :id AND p.isActive = true")
+  Post findByPostIdAndIsActive(Long id);
+
+  @Query(value = "SELECT p FROM Post p WHERE (p.title LIKE %:word% OR p.content LIKE %:word%) AND p.isActive = true")
+  List<Post> findByWordAndIsActive(String word);
 }

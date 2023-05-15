@@ -1,5 +1,6 @@
 package carrotTeam.carrot.domain.post.dto;
 
+import carrotTeam.carrot.domain.comment.domain.entity.Comment;
 import carrotTeam.carrot.domain.post.domain.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PostInfo {
+public class PostInfoWithComment {
 
   private Long user_id;
   private String title;
@@ -22,16 +23,7 @@ public class PostInfo {
   private Boolean isActive;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
+  private List<String> comment;
 
-  public static PostInfo of(Post entity) {
-    return PostInfo.builder()
-        .user_id(entity.getUser().getId())
-        .title(entity.getTitle())
-        .content(entity.getContent())
-        .picture_address(entity.getPicture_address())
-        .isActive(entity.getIsActive())
-        .createdAt(entity.getCreatedAt())
-        .updatedAt(entity.getUpdatedAt())
-        .build();
-  }
 }
+
