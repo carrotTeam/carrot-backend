@@ -23,8 +23,8 @@ public class RedisScheduled {
   private final RedisTemplate<String, RedisPost> redisTemplate;
   @Scheduled(fixedDelay = 10000) //10초마다 실행
   public void flushViews() {
-    System.out.println("조회수 스케쥴러 실행 중 !!!");
-줌
+    System.out.println("조회수 스케쥴러 실행 중 !!!"); //이후 log로 변경 예정
+
     Set<String> keys = redisTemplate.keys("*");
     Map<String, Object> redisHash = new HashMap<>();
 
@@ -50,5 +50,11 @@ public class RedisScheduled {
       post.updateView(redisPost.getViewCount());
       postRepository.save(post);
     });
+  }
+
+  @Scheduled(fixedRate = 50000) //50초마다 실향
+  public void cleanupRedisMemory() {
+    redisTemplate.getConnectionFactory().getConnection().flushAll();
+    System.out.println("레디스 메모리 초기화 진행 중 !!!"); //이후 log로 변경 예정
   }
 }
