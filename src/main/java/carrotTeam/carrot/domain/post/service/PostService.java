@@ -112,42 +112,4 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    //@Scheduled(fixedDelay = 5000)
-    public void flushViews() {
-        //LocalDateTime lastUpdatedTime = LocalDateTime.now().minusSeconds(5);
-        Set<String> keys = redisTemplate.keys("*");
-
-        Map<String, Object> redisHash = new HashMap<>();
-
-        for (String s : keys) {
-            redisHash.put(s, redisTemplate.opsForValue().get(s));
-        }
-
-        //  레디스에서 조회수 변경이 있는 id만 찾아서 리스트로 제작
-        List<RedisPost> redisPosts = redisHash.values().stream()
-                .map(obj -> (RedisPost) obj)
-                .filter(redisPost -> redisPost.getViewCount() != 0)
-                .collect(Collectors.toList());
-
-        for (Object key : keys) {
-            RedisPost redisPost = redisTemplate.opsForValue().get(key.toString());
-            redisPost.cleanViewCount();
-            redisTemplate.opsForValue().set(key.toString(), redisPost);
-        }
-
-
-        redisPosts.forEach(redisPost -> {
-            Post post = postRepository.findById(redisPost.getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Post not found for id " + redisPost.getId()));
-            post.updateView(redisPost.getViewCount());
-            postRepository.save(post);
-        });
-    }
-
-//    @PostConstruct
-//    public void init() {
-//        flushViews();
-//    }
-
-
 }

@@ -56,6 +56,8 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.8'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework:spring-context:5.3.9'
 }
 
 tasks.named('test') {

@@ -71,10 +71,10 @@ public class PostController {
     }
 
 
-    @GetMapping("/test")
-    public void flushViewsTest (
-    ) throws IOException {
-        service.flushViews();
-    }
+//    @GetMapping("/test")
+//    public void flushViewsTest (
+//    ) throws IOException {
+//        service.flushViews();
+//    }
 
 }
