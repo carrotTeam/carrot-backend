@@ -26,13 +26,12 @@ public class RedisConfig extends CachingConfigurerSupport {
     public LettuceConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(host, port);
 
-
-        // Redis의 notify-keyspace-events 설정을 Kx로 변경
-        redisStandaloneConfiguration.setNotifyKeyspaceEvents(NotifyKeyspaceEvents.Kx);
-
-        return new LettuceConnectionFactory(redisStandaloneConfiguration);
+        return new LettuceConnectionFactory(host, port);
+//        // Redis의 notify-keyspace-events 설정을 Kx로 변경
+//        redisStandaloneConfiguration.setNotifyKeyspaceEvents(NotifyKeyspaceEvents.Kx);
+//
+//        return new LettuceConnectionFactory(redisStandaloneConfiguration);
     }
-        //return new LettuceConnectionFactory(host, port);
 
 
     @Bean

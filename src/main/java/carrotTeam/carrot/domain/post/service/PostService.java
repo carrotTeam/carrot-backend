@@ -132,7 +132,9 @@ public class PostService {
         for (Object key : keys) {
             RedisPost redisPost = redisTemplate.opsForValue().get(key.toString());
             redisPost.cleanViewCount();
+            redisTemplate.opsForValue().set(key.toString(), redisPost);
         }
+
 
         redisPosts.forEach(redisPost -> {
             Post post = postRepository.findById(redisPost.getId())
