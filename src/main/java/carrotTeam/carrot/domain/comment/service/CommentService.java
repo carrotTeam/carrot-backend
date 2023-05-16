@@ -13,8 +13,10 @@ import carrotTeam.carrot.domain.post.exception.NotFoundPost;
 import carrotTeam.carrot.domain.user.domain.entity.User;
 import carrotTeam.carrot.domain.user.domain.repositorty.UserRepository;
 import carrotTeam.carrot.domain.user.exception.NotFoundUser;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,10 +63,21 @@ public class CommentService {
     if (!postRepository.existsById(id)) {
       throw new NotFoundPost();
     }
-    List<CommentResponse> commentList =
-        commentRepository.findByPostId(id).stream()
-            .map(this::commentEntityToCommentResponse)
-            .collect(Collectors.toList());
+    return convertCommentStructure(commentRepository.findByPostId(id));
+  }
+
+  public List<CommentResponse> convertCommentStructure(List<Comment> comments) {
+    List<CommentResponse> commentList = new ArrayList<>();
+    Map<Long, CommentResponse> map = new HashMap<>();
+    comments.stream().forEach(c -> {
+      CommentResponse commentResponse = this.commentEntityToCommentResponse(c);
+      map.put(commentResponse.getComment_Id(), commentResponse);
+      if (c.getParentComment() != null) {
+        map.get(c.getParentComment().getId()).getChildrenComment().add(commentResponse);
+      } else {
+        commentList.add(commentResponse);
+      }
+    });
     return commentList;
   }
 
@@ -73,7 +86,7 @@ public class CommentService {
         .comment_Id(comment.getId())
         .content(comment.getContent())
         .nickName(comment.getUser().getNickname())
-        .localDateTime(comment.getCreatedAt())
+        .createAt(comment.getCreatedAt())
         .build();
   }
 
