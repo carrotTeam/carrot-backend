@@ -20,6 +20,12 @@ public class CommentResponse {
   private LocalDateTime createAt;
   private List<CommentResponse> childrenComment = new ArrayList<>();
 
+  public List<CommentResponse> getChildrenComment() {
+    if (childrenComment == null) {
+      childrenComment = new ArrayList<>();
+    }
+    return childrenComment;
+  }
 
 }
 
