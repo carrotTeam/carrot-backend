@@ -4,6 +4,7 @@ import carrotTeam.carrot.domain.comment.domain.entity.Comment;
 import carrotTeam.carrot.domain.comment.domain.repository.CommentRepository;
 import carrotTeam.carrot.domain.comment.exception.NotFoundComment;
 import carrotTeam.carrot.domain.post.domain.entity.Post;
+import carrotTeam.carrot.domain.post.domain.entity.RedisPost;
 import carrotTeam.carrot.domain.post.domain.repository.PostRepository;
 import carrotTeam.carrot.domain.post.dto.PostInfo;
 import carrotTeam.carrot.domain.post.dto.PostInfoWithComment;
@@ -19,6 +20,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,6 +38,7 @@ public class PostService {
   private final UserRepository userRepository;
   private final CommentRepository commentRepository;
   private final PostMapper postMapper;
+  private final RedisTemplate<String, RedisPost> redisTemplate;
 
   @Value("${cloud.aws.s3.bucket}")
   private String bucket;
@@ -147,6 +150,7 @@ public class PostService {
   }
 
   public PostInfoWithComment findByPostId(Long id) {
+    increaseView(id);
     Post post = postRepository.findByPostIdAndIsActive(id);
     return postMapper.mapPostEntityToPostInfoWithComment(post);
 
@@ -157,5 +161,15 @@ public class PostService {
         .stream()
         .map(PostInfo::of)
         .collect(Collectors.toList());
+  }
+
+  public void increaseView(Long id) {
+    RedisPost redisPost = redisTemplate.opsForValue().get(id.toString());
+    if (redisPost == null) {
+      redisPost = new RedisPost();
+      redisPost.setId(id);
+    }
+    redisPost.increaseViewCount();
+    redisTemplate.opsForValue().set(id.toString(), redisPost);
   }
 }
