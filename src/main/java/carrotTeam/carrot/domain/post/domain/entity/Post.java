@@ -57,7 +57,7 @@ public class Post extends BaseEntity {
     this.picture_address = picture_address;
   }
 
-  public void updateView (Long viewCount) {
+  public void updateView(Long viewCount) {
     this.view += viewCount;
   }
 }
