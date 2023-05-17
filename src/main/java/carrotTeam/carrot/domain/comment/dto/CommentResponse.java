@@ -1,5 +1,6 @@
 package carrotTeam.carrot.domain.comment.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class CommentResponse {
   private Long comment_Id;
   private String nickName;
   private String content;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
   private LocalDateTime createAt;
   private List<CommentResponse> childrenComment = new ArrayList<>();
 
