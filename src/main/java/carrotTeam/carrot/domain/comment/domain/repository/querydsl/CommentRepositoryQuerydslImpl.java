@@ -21,6 +21,7 @@ public class CommentRepositoryQuerydslImpl implements CommentRepositoryQuerydsl 
         .select(comment)
         .from(comment)
         .leftJoin(comment.parentComment)
+        .leftJoin(comment.user).fetchJoin()
         .where(comment.post.id.eq(postId))
         .orderBy(
             comment.parentComment.id.asc().nullsFirst(),
