@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,8 +23,12 @@ public class CommentResponse {
   private List<CommentResponse> childrenComment = new ArrayList<>();
 
   public List<CommentResponse> getChildrenComment() {
-    return Optional.ofNullable(childrenComment).orElse(new ArrayList<>());
+    if (childrenComment == null) {
+      childrenComment = new ArrayList<>();
+    }
+    return childrenComment;
   }
+
 
 }
 
