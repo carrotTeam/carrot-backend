@@ -1,7 +1,6 @@
 package carrotTeam.carrot.domain.post.dto;
 
-import carrotTeam.carrot.domain.comment.domain.entity.Comment;
-import carrotTeam.carrot.domain.post.domain.entity.Post;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +20,9 @@ public class PostInfoWithComment {
   private String content;
   private List<String> picture_address;
   private Boolean isActive;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
   private LocalDateTime createdAt;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
   private LocalDateTime updatedAt;
   private List<String> comment;
 
