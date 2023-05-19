@@ -15,16 +15,23 @@ public class RedisPost implements Serializable {
   @Id
   private Long id;
   private Long viewCount;
+  private Long likeCount;
 
   public RedisPost() {
     this.viewCount = 0L;
+    this.likeCount = 0L;
   }
 
   public void increaseViewCount() {
     this.viewCount++;
   }
 
-  public void cleanViewCount() {
+  public void increaseLikeCount() {
+    this.likeCount++;
+  }
+
+  public void cleanViewLikeCount() {
     this.viewCount = 0L;
+    this.likeCount = 0L;
   }
 }
