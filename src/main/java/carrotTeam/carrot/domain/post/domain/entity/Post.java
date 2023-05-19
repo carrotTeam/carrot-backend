@@ -27,10 +27,10 @@ public class Post extends BaseEntity {
   @Column(name = "content", nullable = false, length = 500)
   private String content;
 
-  @Column(name = "view", nullable = false)
+  @Column(name = "view_count", nullable = false)
   private int viewCount;
 
-  @Column(name = "like", nullable = false)
+  @Column(name = "like_count", nullable = false)
   private int likeCount;
 
   @Column(name = "picture_address", nullable = false, length = 2000)
