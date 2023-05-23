@@ -54,7 +54,8 @@ public class PostController {
       address_list.add(picture_address);
     }
 
-    PostInfo postInfo = service.updatePost(postUpdateRequest.getUser_id(), postUpdateRequest.getPost_id(),
+    PostInfo postInfo = service.updatePost(postUpdateRequest.getUser_id(),
+        postUpdateRequest.getPost_id(),
         postUpdateRequest.getTitle(),
         postUpdateRequest.getContent(), address_list);
     return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_POST_SUCCESS, postInfo));

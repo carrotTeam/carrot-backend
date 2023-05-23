@@ -27,6 +27,9 @@ public class Post extends BaseEntity {
   @Column(name = "content", nullable = false, length = 500)
   private String content;
 
+  @Column(name = "view", nullable = false)
+  private int view;
+
   @Column(name = "picture_address", nullable = false, length = 2000)
   @ElementCollection
   private List<String> picture_address;
@@ -52,5 +55,9 @@ public class Post extends BaseEntity {
     this.title = title;
     this.content = content;
     this.picture_address = picture_address;
+  }
+
+  public void updateView(Long viewCount) {
+    this.view += viewCount;
   }
 }
