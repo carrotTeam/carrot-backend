@@ -36,14 +36,5 @@ public class RedisConfig extends CachingConfigurerSupport {
     redisTemplate.setConnectionFactory(redisConnectionFactory());
     return redisTemplate;
   }
-
-  @Bean
-  public CacheManager cacheManager() {
-    RedisCacheConfiguration cacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-        .entryTtl(Duration.ofSeconds(60)); // 60초 만료시간으로 설정
-    return RedisCacheManager.builder(redisConnectionFactory())
-        .cacheDefaults(cacheConfig)
-        .build();
-  }
 }
 
