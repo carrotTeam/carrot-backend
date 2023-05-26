@@ -92,6 +92,13 @@ public class PostController {
     return service.findByPostId(id);
   }
 
+  @GetMapping("like/{id}")
+  public PostInfoWithComment upByPostIdPostLike(
+      @PathVariable Long id
+  ) {
+    return service.upByPostIdPostLike(id);
+  }
+
   @GetMapping("/word/{word}")
   public ResponseEntity<ResultResponse> findTotalRestaurant(
       @RequestParam String word

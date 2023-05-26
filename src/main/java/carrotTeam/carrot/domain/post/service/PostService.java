@@ -156,13 +156,6 @@ public class PostService {
 
   }
 
-  public List<PostInfo> findByWord(String word) {
-    return postRepository.findByWordAndIsActive(word)
-        .stream()
-        .map(PostInfo::of)
-        .collect(Collectors.toList());
-  }
-
   public void increaseView(Long id) {
     RedisPost redisPost = redisTemplate.opsForValue().get(id.toString());
     if (redisPost == null) {
@@ -172,4 +165,30 @@ public class PostService {
     redisPost.increaseViewCount();
     redisTemplate.opsForValue().set(id.toString(), redisPost);
   }
+
+  public List<PostInfo> findByWord(String word) {
+    return postRepository.findByWordAndIsActive(word)
+        .stream()
+        .map(PostInfo::of)
+        .collect(Collectors.toList());
+  }
+
+  public PostInfoWithComment upByPostIdPostLike(Long id) {
+    increaseLike(id);
+    Post post = postRepository.findByPostIdAndIsActive(id);
+    return postMapper.mapPostEntityToPostInfoWithComment(post);
+  }
+
+  public void increaseLike(Long id) {
+    RedisPost redisPost = redisTemplate.opsForValue().get(id.toString()) ;
+    if (redisPost == null) {
+      redisPost = new RedisPost();
+      redisPost.setId(id);
+    }
+    redisPost.increaseLikeCount();
+    redisTemplate.opsForValue().set(id.toString(), redisPost);
+  }
+
+
+
 }

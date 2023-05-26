@@ -27,8 +27,11 @@ public class Post extends BaseEntity {
   @Column(name = "content", nullable = false, length = 500)
   private String content;
 
-  @Column(name = "view", nullable = false)
-  private int view;
+  @Column(name = "view_count", nullable = false)
+  private int viewCount;
+
+  @Column(name = "like_count", nullable = false)
+  private int likeCount;
 
   @Column(name = "picture_address", nullable = false, length = 2000)
   @ElementCollection
@@ -58,6 +61,10 @@ public class Post extends BaseEntity {
   }
 
   public void updateView(Long viewCount) {
-    this.view += viewCount;
+    this.viewCount += viewCount;
+  }
+
+  public void updateLike(Long likeCount) {
+    this.likeCount += likeCount;
   }
 }

@@ -23,7 +23,7 @@ public class RedisScheduled {
   private final RedisTemplate<String, RedisPost> redisTemplate;
   @Scheduled(fixedDelay = 10000) //10초마다 실행
   public void flushViews() {
-    System.out.println("조회수 스케쥴러 실행 중 !!!"); //이후 log로 변경 예정
+    System.out.println("조회수, 좋아요 스케쥴러 실행 중 !!!"); //이후 log로 변경 예정
 
     Set<String> keys = redisTemplate.keys("*");
     Map<String, Object> redisHash = new HashMap<>();
@@ -33,21 +33,35 @@ public class RedisScheduled {
     }
 
     //  레디스에서 조회수 변경이 있는 id만 찾아서 리스트로 제작
-    List<RedisPost> redisPosts = redisHash.values().stream()
+    List<RedisPost> redisViewPosts = redisHash.values().stream()
         .map(obj -> (RedisPost) obj)
         .filter(redisPost -> redisPost.getViewCount() != 0)
         .collect(Collectors.toList());
 
+    //  레디스에서 좋아요 변경이 있는 id만 찾아서 리스트로 제작
+    List<RedisPost> redisLikePosts = redisHash.values().stream()
+        .map(obj -> (RedisPost) obj)
+        .filter(redisPost -> redisPost.getLikeCount() != 0)
+        .collect(Collectors.toList());
+
+    // 모든 키의 value 값을 0으로 초기화
     for (Object key : keys) {
       RedisPost redisPost = redisTemplate.opsForValue().get(key.toString());
-      redisPost.cleanViewCount();
+      redisPost.cleanViewLikeCount();
       redisTemplate.opsForValue().set(key.toString(), redisPost);
     }
 
-    redisPosts.forEach(redisPost -> {
+    redisViewPosts.forEach(redisPost -> {
       Post post = postRepository.findById(redisPost.getId())
           .orElseThrow(() -> new IllegalArgumentException("Post not found for id " + redisPost.getId()));
       post.updateView(redisPost.getViewCount());
+      postRepository.save(post);
+    });
+
+    redisLikePosts.forEach(redisPost -> {
+      Post post = postRepository.findById(redisPost.getId())
+          .orElseThrow(() -> new IllegalArgumentException("Post not found for id " + redisPost.getId()));
+      post.updateLike(redisPost.getLikeCount());
       postRepository.save(post);
     });
   }
